@@ -4,6 +4,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import FoldableCard from 'components/foldable-card';
+import { translate as __ } from 'i18n-calypso';
 
 /**
  * Internal dependencies
@@ -32,24 +33,26 @@ export const Page = ( props ) => {
 		[ 'scan', 'Security Scanning', 'Automatically scan your site for common threats and attacks.' ],
 		[ 'sso', getModule( 'sso' ).name, getModule( 'sso' ).description, getModule( 'sso' ).learn_more_button ]
 	].map( ( element ) => {
-		var toggle = (
-			<ModuleToggle slug={ element[0] } activated={ isModuleActivated( element[0] ) }
-				toggling={ isTogglingModule( element[0] ) }
-				toggleModule={ toggleModule } />
-		);
+		var unavailableInDevMode = isUnavailableInDevMode( props, element[0] ),
+			toggle = (
+				unavailableInDevMode ? __( 'Unavailable in Dev Mode' ) :
+				<ModuleToggle slug={ element[0] } activated={ isModuleActivated( element[0] ) }
+					toggling={ isTogglingModule( element[0] ) }
+					toggleModule={ toggleModule } />
+			),
+			customClasses = unavailableInDevMode ? 'devmode-disabled' : '';
 
 		if ( 'scan' === element[0] ) {
 			toggle = '';
 		}
 
 		return (
-			<FoldableCard key={ `module-card_${element[0]}` /* https://fb.me/react-warning-keys */ }
+			<FoldableCard className={ customClasses } key={ `module-card_${element[0]}` /* https://fb.me/react-warning-keys */ }
 				header={ element[1] }
 				subheader={ element[2] }
 				summary={ toggle }
 				expandedSummary={ toggle }
 				clickableHeaderText={ true }
-				disabled={ isUnavailableInDevMode( props, element[0] ) }
 			>
 				{ isModuleActivated( element[0] ) || 'scan' === element[0] ?
 					<SecurityModulesSettings module={ getModule( element[ 0 ] ) } /> :

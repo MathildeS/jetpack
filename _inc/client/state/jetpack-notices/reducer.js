@@ -14,14 +14,22 @@ import {
 	JETPACK_NOTICES_DISMISS_FAIL,
 	JETPACK_NOTICES_DISMISS_SUCCESS,
 	DISCONNECT_SITE_SUCCESS,
-	RESET_OPTIONS_SUCCESS
+	RESET_OPTIONS_SUCCESS,
+	JUMPSTART_ACTIVATE_SUCCESS,
+	JUMPSTART_SKIP
 } from 'state/action-types';
 import restApi from 'rest-api';
 
 const status = ( state = false , action ) => {
 	switch ( action.type ) {
-		case DISCONNECT_SITE_SUCCESS:
+		case DISCONNECT_SITE_SUCCESS :
 			return 'disconnected';
+
+		case JUMPSTART_ACTIVATE_SUCCESS :
+			return 'new_connection_jumpstart';
+
+		case JUMPSTART_SKIP :
+			return 'new_connection_no_jumpstart';
 
 		default:
 			return state;
